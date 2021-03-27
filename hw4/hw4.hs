@@ -64,9 +64,19 @@ cancelTrues _ _        = False
 map' :: (a -> b) -> [a] -> [b]
 map' f = foldr (\elem acc -> f elem : acc) []
 
-myFoldl :: (a -> b -> a) -> a -> [b] -> a
-myFoldl f base xs = foldr (\)
-
-
 -- foldr f z [x1, x2, ..., xn] == x1 ‘f‘ (x2 ‘f‘ ... (xn ‘f‘ z)...)
 -- foldl f z [x1, x2, ..., xn] == (...((z ‘f‘ x1) ‘f‘ x2) ‘f‘...) ‘f‘ xn
+
+-- myFoldl :: (a -> b -> a) -> a -> [b] -> a
+-- myFoldl f base xs = foldr (flip f) base (reverse xs)
+
+myFoldl :: (a -> b -> a) -> a -> [b] -> a
+myFoldl f base xs = foldr (\elem funcAcc -> (\elemAcc -> funcAcc (f elemAcc elem))) id xs base
+
+-- foldr returns a function like this (to be called with base): \elemAcc -> (f (f (f ... (f elemAcc elem_1) ... elem_n-2) elem_n-1) elem_n)
+
+
+-- Finding primes
+sieveSundaram :: Integer -> [Integer]
+sieveSundaram n = let excluded = [i+j+2*i*j | i <- [1..n], j <- [1..n], i <= j, i+j+2*i*j <= n]
+                  in map (\x -> x * 2 + 1) (filter (\x -> x `notElem` excluded) [1..n])
