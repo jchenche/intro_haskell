@@ -28,7 +28,7 @@ nextLevel :: Employee -> [(GuestList, GuestList)] -> (GuestList, GuestList)
 nextLevel boss []             = (GL [boss] (empFun boss), GL [] 0)
 nextLevel boss guestListPairs =
     let nextLevelWithBoss = foldr (<>) (GL [boss] (empFun boss)) (map snd guestListPairs)
-        nextLevelWithoutBoss = mconcat (map fst guestListPairs)
+        nextLevelWithoutBoss = mconcat (map (\(gl1, gl2) -> moreFun gl1 gl2) guestListPairs)
     in (nextLevelWithBoss, nextLevelWithoutBoss)
 
 -- Exercise 4
